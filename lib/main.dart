@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+      url: 'https://lufcdolvcnpgsbjhdooo.supabase.co',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1ZmNkb2x2Y25wZ3Niamhkb29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4MjY1NjIsImV4cCI6MjA1MjQwMjU2Mn0.FA4C97uZZfpuxfBDtmJUCxWs_O20NJLDtugmhNepMIY');
   runApp(const MyApp());
 }
 
@@ -36,22 +42,22 @@ class LoginPage extends StatelessWidget {
                 height: 300,
               ),
               const _InputField(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account?"),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUpPage()),
-                      );
-                    },
-                    child: const Text("Register"),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     const Text("Don't have an account?"),
+              //     TextButton(
+              //       onPressed: () {
+              //         Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //               builder: (context) => const SignUpPage()),
+              //         );
+              //       },
+              //       child: const Text("Register"),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),
@@ -72,27 +78,72 @@ class _InputFieldState extends State<_InputField> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword =
       true; // Untuk menyembunyikan atau menampilkan password
+  final SupabaseClient supabase = Supabase.instance.client;
 
-  void _login(BuildContext context) {
-    if (_usernameController.text.isEmpty) {
-      // Menampilkan pesan error jika username kosong
+  Future<void> _login() async {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Username tidak boleh kosong!"),
+          content: Text("Username dan password tidak boleh kosong!"),
           backgroundColor: Colors.redAccent,
         ),
       );
       return;
     }
 
-    // Jika validasi berhasil, navigasi ke HomePage
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
-      ),
-    );
+    try {
+      final response = await supabase
+          .from('user')
+          .select()
+          .eq('username', username)
+          .eq('password', password)
+          .single();
+
+      if (response != null) {
+        // Login berhasil
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login berhasil!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      } else {
+        // Data tidak ditemukan
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Username atau password salah!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    }
   }
+
+  // void _login(BuildContext context) {
+  //   if (_usernameController.text.isEmpty) {
+  //     // Menampilkan pesan error jika username kosong
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text("Username tidak boleh kosong!"),
+  //         backgroundColor: Colors.redAccent,
+  //       ),
+  //     );
+  //     return;
+  //   }
+
+  //   // Jika validasi berhasil, navigasi ke HomePage
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const HomePage(),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +179,8 @@ class _InputFieldState extends State<_InputField> {
           ),
         ),
         ElevatedButton(
-          onPressed: () => _login(context),
+          onPressed:
+              _login, // Jangan lupa tanda kurung jika ingin menjalankan fungsi
           style: ElevatedButton.styleFrom(
             maximumSize: const Size(200, 50),
             backgroundColor: Colors.white,
@@ -222,6 +274,7 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
                 "Create a new account",
@@ -232,11 +285,13 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 10),
               _buildTextField("Password", icon: Icons.lock, isPassword: true),
               const SizedBox(height: 20),
-              ElevatedButton(
+              TextButton(
+      
                 onPressed: () {
                   // Sign Up logic here
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  fixedSize: Size(400, 100),
                   backgroundColor: Colors.white,
                   shape: const StadiumBorder(),
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -244,7 +299,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: const Text(
                   "Register",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 30,
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
