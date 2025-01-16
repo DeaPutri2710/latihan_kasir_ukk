@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
@@ -42,22 +43,6 @@ class LoginPage extends StatelessWidget {
                 height: 300,
               ),
               const _InputField(),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     const Text("Don't have an account?"),
-              //     TextButton(
-              //       onPressed: () {
-              //         Navigator.push(
-              //           context,
-              //           MaterialPageRoute(
-              //               builder: (context) => const SignUpPage()),
-              //         );
-              //       },
-              //       child: const Text("Register"),
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ),
@@ -123,27 +108,6 @@ class _InputFieldState extends State<_InputField> {
       );
     }
   }
-
-  // void _login(BuildContext context) {
-  //   if (_usernameController.text.isEmpty) {
-  //     // Menampilkan pesan error jika username kosong
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text("Username tidak boleh kosong!"),
-  //         backgroundColor: Colors.redAccent,
-  //       ),
-  //     );
-  //     return;
-  //   }
-
-  //   // Jika validasi berhasil, navigasi ke HomePage
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const HomePage(),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -222,111 +186,6 @@ class _InputFieldState extends State<_InputField> {
         filled: true,
         prefixIcon: Icon(
           icon, // Ikon yang sesuai (person atau lock)
-          color: Colors.black,
-        ),
-        // Menambahkan ikon mata di sisi kanan untuk password
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              )
-            : null,
-      ),
-      obscureText: isPassword
-          ? _obscurePassword
-          : false, // Menangani tampilkan/menghilangkan password
-      style: const TextStyle(color: Colors.black), // Warna teks hitam
-    );
-  }
-}
-
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
-
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword =
-      true; // Untuk menyembunyikan atau menampilkan password
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.pink
-          .shade50, // Background warna pink muda yang sama seperti halaman login
-      appBar: AppBar(
-        title: const Text("Register"),
-        backgroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                "Create a new account",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
-              _buildTextField("Username", icon: Icons.person),
-              const SizedBox(height: 10),
-              _buildTextField("Password", icon: Icons.lock, isPassword: true),
-              const SizedBox(height: 20),
-              TextButton(
-      
-                onPressed: () {
-                  // Sign Up logic here
-                },
-                style: TextButton.styleFrom(
-                  fixedSize: Size(400, 100),
-                  backgroundColor: Colors.white,
-                  shape: const StadiumBorder(),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text(
-                  "Register",
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(String hintText,
-      {required IconData icon, bool isPassword = false}) {
-    return TextField(
-      controller: isPassword ? _passwordController : _usernameController,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Colors.black), // Warna teks hitam
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide.none,
-        ),
-        fillColor: Colors.white,
-        filled: true,
-        prefixIcon: Icon(
-          icon, // Ikon yang sesuai
           color: Colors.black,
         ),
         // Menambahkan ikon mata di sisi kanan untuk password
