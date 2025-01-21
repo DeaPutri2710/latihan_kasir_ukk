@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kasir/pelanggan/insertpelanggan.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';'
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'updatepelanggan.dart';
 
 class PelangganTab extends StatefulWidget {
@@ -23,7 +24,8 @@ class _PelangganTabState extends State<PelangganTab> {
       isLoading = true;
     });
     try {
-      final response = await Supabase.instance.client.from('pelanggan').select();
+      final response =
+          await Supabase.instance.client.from('pelanggan').select();
       setState(() {
         pelanggan = List<Map<String, dynamic>>.from(response);
         isLoading = false;
@@ -38,7 +40,10 @@ class _PelangganTabState extends State<PelangganTab> {
 
   Future<void> deletePelanggan(int id) async {
     try {
-      await Supabase.instance.client.from('pelanggan').delete().eq('Pelangganid', id);
+      await Supabase.instance.client
+          .from('pelanggan')
+          .delete()
+          .eq('Pelangganid', id);
       fetchPelanggan();
     } catch (e) {
       print('Error deleting pelanggan: $e');
@@ -50,7 +55,8 @@ class _PelangganTabState extends State<PelangganTab> {
     return Scaffold(
       body: isLoading
           ? Center(
-              child: LoadingAnimationWidget.twoRotatingArc(color: Colors.grey, size: 30),
+              child: LoadingAnimationWidget.twoRotatingArc(
+                  color: Colors.grey, size: 30),
             )
           : pelanggan.isEmpty
               ? Center(
@@ -79,23 +85,28 @@ class _PelangganTabState extends State<PelangganTab> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              langgan['NamaPelanggan'] ?? 'Pelanggan tidak tersedia',
+                              langgan['NamaPelanggan'] ??
+                                  'Pelanggan tidak tersedia',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
                               ),
                             ),
                             SizedBox(height: 4),
                             Text(
                               langgan['Alamat'] ?? 'Alamat Tidak tersedia',
                               style: TextStyle(
-                                fontStyle: FontStyle.italic, fontSize: 16, color: Colors.grey,
+                                fontStyle: FontStyle.italic,
+                                fontSize: 16,
+                                color: Colors.grey,
                               ),
                             ),
                             SizedBox(height: 8),
                             Text(
                               langgan['NomorTelepon'] ?? 'Tidak tersedia',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
                               ),
                               textAlign: TextAlign.justify,
                             ),
@@ -104,14 +115,18 @@ class _PelangganTabState extends State<PelangganTab> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.blueAccent),
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.blueAccent),
                                   onPressed: () {
-                                    final Pelangganid = langgan['Pelangganid'] ?? 0; // Pastikan ini sesuai dengan kolom di database
+                                    final Pelangganid = langgan[
+                                            'Pelangganid'] ??
+                                        0; // Pastikan ini sesuai dengan kolom di database
                                     if (Pelangganid != 0) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => EditPelanggan(Pelangganid: Pelangganid),
+                                          builder: (context) => EditPelanggan(
+                                              Pelangganid: Pelangganid),
                                         ),
                                       );
                                     } else {
@@ -120,22 +135,26 @@ class _PelangganTabState extends State<PelangganTab> {
                                   },
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.redAccent),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.redAccent),
                                   onPressed: () {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: const Text('Hapus Pelanggan'),
-                                          content: const Text('Apakah Anda yakin ingin menghapus pelanggan ini?'),
+                                          content: const Text(
+                                              'Apakah Anda yakin ingin menghapus pelanggan ini?'),
                                           actions: [
                                             TextButton(
-                                              onPressed: () => Navigator.pop(context),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
                                               child: const Text('Batal'),
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                deletePelanggan(langgan['Pelangganid']);
+                                                deletePelanggan(
+                                                    langgan['Pelangganid']);
                                                 Navigator.pop(context);
                                               },
                                               child: const Text('Hapus'),
@@ -158,7 +177,7 @@ class _PelangganTabState extends State<PelangganTab> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ()),
+            MaterialPageRoute(builder: (context) => insertPage()),
           );
         },
         child: Icon(Icons.add),

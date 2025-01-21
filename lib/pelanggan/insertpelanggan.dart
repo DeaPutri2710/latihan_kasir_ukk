@@ -21,16 +21,14 @@ class _insertPageState extends State<insertPage> {
       final String Alamat = _alamat.text;
       final String NomorTelepon = _notlp.text;
 
-      final response = await Supabase.instance.client.from('pelanggan').insert([
-        {
-          'NamaPelanggan': NamaPelanggan,
-          'Alamat': Alamat,
-          'NomorTelepon': NomorTelepon,
-        }
-      ]);
+      final response = await Supabase.instance.client.from('pelanggan').insert({
+        'NamaPelanggan': NamaPelanggan,
+        'Alamat': Alamat,
+        'NomorTelepon': NomorTelepon,
+      });
 
       //Cek jika ada error pada response
-      if (response.error != null) {
+      if (response == null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
@@ -53,44 +51,59 @@ class _insertPageState extends State<insertPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _nmplg,
-              decoration: const InputDecoration(
-                labelText: 'Nama Pelanggan',
-                border: OutlineInputBorder(),
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nmplg,
+                decoration: const InputDecoration(
+                  labelText: 'Nama Pelanggan',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Alamat tidak boleh kosong';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Alamat tidak boleh kosong';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _notlp,
-              decoration: const InputDecoration(
-                labelText: 'Nomor Telepon',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _notlp,
+                decoration: const InputDecoration(
+                  labelText: 'Nomor Telepon',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Nomor tidak boleh kosong';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Nomor tidak boleh kosong';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: langgan,
-              child: const Text('Tambah'),
-            ),
-          ],
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _alamat,
+                decoration: const InputDecoration(
+                  labelText: 'Alamat',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Alamat tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: langgan,
+                child: const Text('Simpan'),
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

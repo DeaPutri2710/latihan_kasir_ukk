@@ -9,8 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, String>> _produkList = []; // Daftar produk
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -86,188 +84,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProdukTab(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            onPressed: () => _showTambahProdukModal(context),
-            child: const Text('Tambah Produk'),
-          ),
-        ),
-        Expanded(
-          child: _produkList.isEmpty
-              ? const Center(
-                  child: Text(
-                    'Belum ada produk',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: _produkList.length,
-                  itemBuilder: (context, index) {
-                    final produk = _produkList[index];
-                    return ListTile(
-                      title: Text(produk['nama'] ?? ''),
-                      subtitle: Text('Harga: Rp ${produk['harga']}'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () =>
-                                _showEditProdukModal(context, index),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _deleteProduk(index),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-        ),
-      ],
+    return const Center(
+      child: Text(
+        'Halaman Produk',
+        style: TextStyle(fontSize: 16),
+      ),
     );
-  }
-
-  void _showTambahProdukModal(BuildContext context) {
-    final TextEditingController namaController = TextEditingController();
-    final TextEditingController hargaController = TextEditingController();
-    final TextEditingController stokController = TextEditingController();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Tambah Produk',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: namaController,
-                decoration: const InputDecoration(
-                    labelText: 'Nama Produk', border: OutlineInputBorder()),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: hargaController,
-                decoration: const InputDecoration(
-                    labelText: 'Harga', border: OutlineInputBorder()),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: stokController,
-                decoration: const InputDecoration(
-                    labelText: 'Stok', border: OutlineInputBorder()),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _produkList.add({
-                      'nama': namaController.text,
-                      'harga': hargaController.text,
-                      'stok': stokController.text,
-                    });
-                  });
-                  Navigator.pop(context); // Tutup modal
-                },
-                child: const Text('Simpan'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showEditProdukModal(BuildContext context, int index) {
-    final produk = _produkList[index];
-    final TextEditingController namaController =
-        TextEditingController(text: produk['nama']);
-    final TextEditingController hargaController =
-        TextEditingController(text: produk['harga']);
-    final TextEditingController stokController =
-        TextEditingController(text: produk['stok']);
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Edit Produk',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: namaController,
-                decoration: const InputDecoration(
-                    labelText: 'Nama Produk', border: OutlineInputBorder()),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: hargaController,
-                decoration: const InputDecoration(
-                    labelText: 'Harga', border: OutlineInputBorder()),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: stokController,
-                decoration: const InputDecoration(
-                    labelText: 'Stok', border: OutlineInputBorder()),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _produkList[index] = {
-                      'nama': namaController.text,
-                      'harga': hargaController.text,
-                      'stok': stokController.text,
-                    };
-                  });
-                  Navigator.pop(context); // Tutup modal
-                },
-                child: const Text('Simpan'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _deleteProduk(int index) {
-    setState(() {
-      _produkList.removeAt(index);
-    });
   }
 }
 
@@ -306,3 +128,4 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+ 
