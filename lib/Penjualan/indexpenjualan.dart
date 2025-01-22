@@ -13,7 +13,7 @@ class _PenjualanTabState extends State<PenjualanTab> {
   bool isLoading = true;
 
   @override
-  void initState() {
+  void initState() { 
     super.initState();
     fetchPenjualan();
   }
@@ -38,7 +38,7 @@ class _PenjualanTabState extends State<PenjualanTab> {
 
   Future<void> deleteBarang(int id) async {
     try {
-      await Supabase.instance.client.from('penjualan').delete().eq('id', id);
+      await Supabase.instance.client.from('penjualan').delete().eq('Penjualanid', id);
       fetchPenjualan();
     } catch (e) {
       print('Error deleting barang: $e');

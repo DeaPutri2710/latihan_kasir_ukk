@@ -2,30 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:kasir/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Insertproduk extends StatefulWidget {
-  const Insertproduk({super.key});
+class insertPage extends StatefulWidget {
+  const insertPage({super.key});
 
   @override
-  State<Insertproduk> createState() => _InsertprodukState();
+  State<insertPage> createState() => _insertPageState();
 }
 
-class _InsertprodukState extends State<Insertproduk> {
-  final _nmprdk = TeksEditingController();
-  final _hrg = TeksEditingController();
-  final _stk = TeksEditingController();
+class _insertPageState extends State<insertPage> {
+  final _nmprdk = TextEditingController();
+  final _hrg = TextEditingController();
+  final _stk = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> produk() async {
+  Future<void> oduk() async {
     if (_formKey.currentState!.validate()) {
       final String NamaProduk = _nmprdk.text;
       final String Harga = _hrg.text;
       final String Stok = _stk.text;
 
       final response = await Supabase.instance.client.from('produk').insert({
-        'Nama Produk': NamaProduk,
+        'NamaProduk': NamaProduk, 
         'Harga': Harga,
         'Stok': Stok,
       });
+
+      //Cek jika ada error pada response
+      if (response == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
     }
   }
 
@@ -56,6 +69,12 @@ class _InsertprodukState extends State<Insertproduk> {
                   labelText: 'Harga',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Harga tidak boleh kosong';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -64,10 +83,16 @@ class _InsertprodukState extends State<Insertproduk> {
                   labelText: 'Stok',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Stok tidak boleh kosong';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: produk,
+                onPressed: oduk,
                 child: const Text('Simpan'),
               ),
             ],

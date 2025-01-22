@@ -22,7 +22,7 @@ class _insertPageState extends State<insertPage> {
       final String NomorTelepon = _notlp.text;
 
       final response = await Supabase.instance.client.from('pelanggan').insert({
-        'NamaPelanggan': NamaPelanggan,
+        'NamaPelanggan': NamaPelanggan, 
         'Alamat': Alamat,
         'NomorTelepon': NomorTelepon,
       });

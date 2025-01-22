@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kasir/Penjualan/indexpenjualan.dart';
 import 'package:kasir/pelanggan/indexpelanggan.dart';
+import 'package:kasir/produk/indexproduk.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,9 +19,15 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           bottom: const TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.people, color: Colors.black), text: 'Pelanggan'),
-              Tab(icon: Icon(Icons.inventory, color: Colors.black), text: 'Produk'),
-              Tab(icon: Icon(Icons.shopping_cart, color: Colors.black), text: 'Penjualan'),
+              Tab(
+                  icon: Icon(Icons.people, color: Colors.black),
+                  text: 'Pelanggan'),
+              Tab(
+                  icon: Icon(Icons.inventory, color: Colors.black),
+                  text: 'Produk'),
+              Tab(
+                  icon: Icon(Icons.shopping_cart, color: Colors.black),
+                  text: 'Penjualan'),
             ],
           ),
           backgroundColor: Colors.pink.shade50,
@@ -30,8 +38,8 @@ class _HomePageState extends State<HomePage> {
         body: TabBarView(
           children: [
             PelangganTab(), // Halaman Pelanggan
-            _buildProdukTab(context), // Halaman Produk
-            const Center(child: Text('Halaman Penjualan')), // Halaman Penjualan
+            ProdukTab(), // Halaman Produk
+            PenjualanTab(), // Halaman Penjualan
           ],
         ),
       ),
@@ -128,4 +136,3 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
- 

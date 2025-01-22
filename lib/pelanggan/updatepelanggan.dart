@@ -23,37 +23,60 @@ class _EditPelangganState extends State<EditPelanggan> {
     _loadPelangganData();
   }
 
-  // Fungsi untuk memuat data pelanggan berdasarkan ID
   Future<void> _loadPelangganData() async {
-    final data = await Supabase.instance.client
-        .from('pelanggan')
-        .select()
-        .eq('Pelangganid', widget.Pelangganid)
-        .single();
+    try {
+      final data = await Supabase.instance.client
+          .from('pelanggan')
+          .select()
+          .eq('Pelangganid', widget.Pelangganid)
+          .single();
 
-    setState(() {
-      _nmplg.text = data['NamaPelanggan'] ?? '';
-      _alamat.text = data['Alamat'] ?? '';
-      _notlp.text = data['NomorTelepon'] ?? '';
-    });
+      if (data != null) {
+        setState(() {
+          _nmplg.text = data['NamaPelanggan'] ?? '';
+          _alamat.text = data['Alamat'] ?? '';
+          _notlp.text = data['NomorTelepon'] ?? '';
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Data pelanggan tidak ditemukan')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error memuat data: $e')),
+      );
+    }
   }
 
-// EditPelanggan.dart
   Future<void> updatePelanggan() async {
     if (_formKey.currentState!.validate()) {
-      // Melakukan update data pelanggan ke database
-      await Supabase.instance.client.from('pelanggan').update({
-        'NamaPelanggan': _nmplg.text,
-        'Alamat': _alamat.text,
-        'NomorTelepon': _notlp.text,
-      }).eq('Pelangganid', widget.Pelangganid);
+      try {
+        final response = await Supabase.instance.client.from('pelanggan').update({
+          'NamaPelanggan': _nmplg.text,
+          'Alamat': _alamat.text,
+          'NomorTelepon': _notlp.text,
+        }).eq('Pelangganid', widget.Pelangganid);
 
-      // Navigasi ke PelangganTab setelah update, dengan menghapus semua halaman sebelumnya dari stack
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-        (route) => false, // Hapus semua halaman sebelumnya
-      );
+        if (response != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data berhasil diupdate')),
+          );
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Gagal mengupdate data')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 
@@ -99,7 +122,7 @@ class _EditPelangganState extends State<EditPelanggan> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _notlp,
+                controller: _notlp, 
                 decoration: const InputDecoration(
                   labelText: 'Nomor Telepon',
                   border: OutlineInputBorder(),

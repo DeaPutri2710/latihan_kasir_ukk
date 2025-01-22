@@ -24,8 +24,7 @@ class _PelangganTabState extends State<PelangganTab> {
       isLoading = true;
     });
     try {
-      final response =
-          await Supabase.instance.client.from('pelanggan').select();
+      final response = await Supabase.instance.client.from('pelanggan').select();
       setState(() {
         pelanggan = List<Map<String, dynamic>>.from(response);
         isLoading = false;
@@ -103,7 +102,7 @@ class _PelangganTabState extends State<PelangganTab> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              langgan['NomorTelepon'] ?? 'Tidak tersedia',
+                              langgan['NomorTelepon'] ?? 'Nomor Telepon Tidak tersedia',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
