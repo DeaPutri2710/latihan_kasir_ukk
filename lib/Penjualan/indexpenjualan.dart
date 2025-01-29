@@ -1,19 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:kasir/penjualan/insertpenjualan.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'dart:async';
 
-class PenjualanTab extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kasir/penjualan/checkout.dart';
+
+class indexpenjualan extends StatefulWidget {
+  const indexpenjualan({super.key});
+
   @override
-  _PenjualanTabState createState() => _PenjualanTabState();
+  State<indexpenjualan> createState() => _indexpenjualanState();
 }
 
-class _PenjualanTabState extends State<PenjualanTab> {
+class _indexpenjualanState extends State<indexpenjualan> {
   List<Map<String, dynamic>> penjualan = [];
   bool isLoading = true;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     fetchPenjualan();
   }
@@ -23,7 +26,10 @@ class _PenjualanTabState extends State<PenjualanTab> {
       isLoading = true;
     });
     try {
-      final response = await Supabase.instance.client.from('penjualan').select();
+      final response = await Supabase.instance.client
+          .from('penjualan')
+          .select('*, pelanggan(*)');
+      print(response);
       setState(() {
         penjualan = List<Map<String, dynamic>>.from(response);
         isLoading = false;
@@ -36,85 +42,79 @@ class _PenjualanTabState extends State<PenjualanTab> {
     }
   }
 
-  Future<void> deleteBarang(int id) async {
+  Future<void> deletePenjualan(int id) async {
     try {
-      await Supabase.instance.client.from('penjualan').delete().eq('Penjualanid', id);
+      await Supabase.instance.client
+          .from('penjualan')
+          .delete()
+          .eq('PenjualanID', id);
       fetchPenjualan();
     } catch (e) {
-      print('Error deleting barang: $e');
+      print('Error deleting penjualan: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print(penjualan);
+    // bool isLoading = true;
     return Scaffold(
       body: isLoading
-          ? Center(
-              child: LoadingAnimationWidget.twoRotatingArc(color: Colors.grey, size: 30),
-            )
-          : penjualan.isEmpty
-              ? Center(
-                  child: Text(
-                    'Tidak ada penjualan',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                )
-              : GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  ),
-                  padding: EdgeInsets.all(8),
-                  itemCount: penjualan.length,
-                  itemBuilder: (context, index) {
-                    final jual = penjualan[index];
-                    return Card(
-                      elevation: 4,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      child: SizedBox(
-                        height: 150,
-                        width: 20,
-                        child: Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                jual['TanggalPenjualan'] ?? 'Tanggal tidak tersedia',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20,
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: penjualan.length,
+              itemBuilder: (context, index) {
+                final item = penjualan[index];
+                return ListTile(
+                  title: Text(item['pelanggan']['NamaPelanggan']),
+                  subtitle: Text('Total harga: ${item['TotalHarga']}'),
+                  trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Hapus Pelanggan'),
+                              content: const Text(
+                                  'Apakah anda yakin ingin menghapus produk ini?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Batal'),
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                'Total Harga: ${jual['TotalHarga'] ?? 'Tidak tersedia'}',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic, fontSize: 16, color: Colors.grey,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Pelanggan ID: ${jual['Pelangganid'] ?? 'Tidak tersedia'}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 14,
-                                ),
-                                textAlign: TextAlign.justify,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                                TextButton(
+                                  onPressed: () {
+                                    deletePenjualan(item['PenjualanID']);
+                                    Navigator.pop(context);
+                                    setState(() {
+                                      penjualan.removeAt(index);
+                                    });
+                                  },
+                                  child: const Text('Hapus'),
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    ),
+                );
+              }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { 
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddTransaksi()));
+        onPressed: () async {
+          var sales = await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => COpage()),
+          );
 
+          if (sales == true) {
+            fetchPenjualan();
+          }
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.grey,
+        ),
       ),
     );
   }

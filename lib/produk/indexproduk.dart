@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/produk/insertproduk.dart';
+import 'package:kasir/produk/updateproduk.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProdukTab extends StatefulWidget {
   @override
-  _ProdukTabState createState() => _ProdukTabState();
+  _ProdukTabState createState() => _ProdukTabState(); 
 }
 
 class _ProdukTabState extends State<ProdukTab> {
@@ -38,7 +39,7 @@ class _ProdukTabState extends State<ProdukTab> {
 
   Future<void> deleteProduk(int id) async {
     try {
-      await Supabase.instance.client.from('produk').delete().eq('Produkid', id);
+      await Supabase.instance.client.from('produk').delete().eq('ProdukID', id);
       fetchProduk();
     } catch (e) {
       print('Error deleting produk: $e');
@@ -86,23 +87,23 @@ class _ProdukTabState extends State<ProdukTab> {
                                 fontSize: 20,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            SizedBox(height: 8),
                             Text(
-                              '${oduk['Harga']}',
+                              'Harga: Rp${oduk['Harga']}',
                               style: TextStyle(
                                 fontStyle: FontStyle.italic,
                                 fontSize: 16,
-                                color: Colors.grey,
+                                color: Colors.grey[700],
                               ),
                             ),
-                            SizedBox(height: 8),
+                            SizedBox(height: 4),
                             Text(
-                               '${oduk['Stok']}',
+                              '${oduk['Stok']} pcs',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 16,
+                                color: Colors.grey[600],
                               ),
-                              textAlign: TextAlign.justify,
                             ),
                             const Divider(),
                             Row(
@@ -112,16 +113,15 @@ class _ProdukTabState extends State<ProdukTab> {
                                   icon: const Icon(Icons.edit,
                                       color: Colors.blueAccent),
                                   onPressed: () {
-                                    final Produkid = oduk['Produkid'] ??
-                                        0; // Pastikan ini sesuai dengan kolom di database
+                                    final Produkid = oduk['ProdukID'] ?? 0;
                                     if (Produkid != 0) {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => EditProduk(
-                                      //         Produkid: Produkid),
-                                      //   ),
-                                      // );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              UpdateProduk(ProdukID: Produkid),
+                                        ),
+                                      );
                                     } else {
                                       print('ID produk tidak valid');
                                     }
@@ -146,7 +146,7 @@ class _ProdukTabState extends State<ProdukTab> {
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                deleteProduk(oduk['Produkid']);
+                                                deleteProduk(oduk['ProdukID']);
                                                 Navigator.pop(context);
                                               },
                                               child: const Text('Hapus'),

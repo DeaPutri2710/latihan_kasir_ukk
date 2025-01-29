@@ -129,19 +129,6 @@ class _InputFieldState extends State<_InputField> {
           isPassword: true,
         ),
         const SizedBox(height: 10),
-        // Forgot Password text
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () {
-              // Forgot Password logic here
-            },
-            child: const Text(
-              "Forgot Password?",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-        ),
         ElevatedButton(
           onPressed:
               _login, // Jangan lupa tanda kurung jika ingin menjalankan fungsi

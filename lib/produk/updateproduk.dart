@@ -2,73 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:kasir/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class UpdatePelanggan extends StatefulWidget {
-  final int PelangganID;
+class UpdateProduk extends StatefulWidget {
+  final int ProdukID;
 
-  const UpdatePelanggan({super.key, required this.PelangganID});
+  const UpdateProduk({super.key, required this.ProdukID});
 
   @override
-  State<UpdatePelanggan> createState() => _UpdatePelangganState();
+  State<UpdateProduk> createState() => _UpdateProdukState();
 }
 
-class _UpdatePelangganState extends State<UpdatePelanggan> {
-  final _namaPelangganController = TextEditingController();
-  final _alamatController = TextEditingController();
-  final _teleponController = TextEditingController();
+class _UpdateProdukState extends State<UpdateProduk> {
+  final _namaProdukController = TextEditingController();
+  final _hargaController = TextEditingController();
+  final _stokController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadDataPelanggan();
+    _loadDataProduk();
   }
 
-  Future<void> _loadDataPelanggan() async {
+  Future<void> _loadDataProduk() async {
     try {
       final data = await Supabase.instance.client
-          .from('pelanggan')
+          .from('produk')
           .select()
-          .eq('PelangganID', widget.PelangganID)
+          .eq('ProdukID', widget.ProdukID)
           .single();
 
       setState(() {
-        _namaPelangganController.text = data['NamaPelanggan'] ?? '';
-        _alamatController.text = data['Alamat'] ?? '';
-        _teleponController.text = data['NomorTelepon'] ?? '';
+        _namaProdukController.text = data['NamaProduk'] ?? '';
+        _hargaController.text = data['Harga'] ?? '';
+        _stokController.text = data['Stok'] ?? '';
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading pelanggan data: $e');
+      print('Error loading produk data: $e');
       setState(() {
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal memuat data pelanggan.')),
+        SnackBar(content: Text('Gagal memuat data produk.')),
       );
     }
   }
 
-  Future<void> _updatePelanggan() async {
+  Future<void> _updateProduk() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await Supabase.instance.client.from('pelanggan').update({
-          'NamaPelanggan': _namaPelangganController.text,
-          'Alamat': _alamatController.text,
-          'NomorTelepon': _teleponController.text,
-        }).eq('PelangganID', widget.PelangganID);
+        await Supabase.instance.client.from('produk').update({
+          'NamaProduk': _namaProdukController.text,
+          'Harga': _hargaController.text,
+          'Stok': _stokController.text,
+        }).eq('PelangganID', widget.ProdukID);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Data pelanggan berhasil diperbarui.')),
+          SnackBar(content: Text('Data produk berhasil diperbarui.')),
         );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       } catch (e) {
-        print('Error updating pelanggan: $e');
+        print('Error updating produk: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal memperbarui data pelanggan.')),
+          SnackBar(content: Text('Gagal memperbarui data produk.')),
         );
       }
     }
@@ -78,7 +78,7 @@ class _UpdatePelangganState extends State<UpdatePelanggan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Pelanggan'),
+        title: Text('Update Produk'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -93,53 +93,53 @@ class _UpdatePelangganState extends State<UpdatePelanggan> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: _namaPelangganController,
+                      controller: _namaProdukController,
                       decoration: InputDecoration(
-                        labelText: 'Nama Pelanggan',
+                        labelText: 'Nama Produk',
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Nama pelanggan tidak boleh kosong.';
+                          return 'Nama Produk tidak boleh kosong.';
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: 16),
                     TextFormField(
-                      controller: _alamatController,
+                      controller: _hargaController,
                       decoration: InputDecoration(
-                        labelText: 'Alamat',
+                        labelText: 'Harga',
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Alamat tidak boleh kosong.';
+                          return 'Harga tidak boleh kosong.';
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: 16),
                     TextFormField(
-                      controller: _teleponController,
+                      controller: _stokController,
                       decoration: InputDecoration(
-                        labelText: 'Nomor Telepon',
+                        labelText: 'Stok',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Nomor telepon tidak boleh kosong.';
+                          return 'Stok tidak boleh kosong.';
                         }
                         if (!RegExp(r'^\d+$').hasMatch(value)) {
-                          return 'Nomor telepon harus berupa angka.';
+                          return 'Stok harus berupa angka.';
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: _updatePelanggan,
+                      onPressed: _updateProduk,
                       child: Text('Update'),
                     ),
                   ],

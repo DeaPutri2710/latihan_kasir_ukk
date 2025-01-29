@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/Penjualan/indexpenjualan.dart';
+import 'package:kasir/main.dart';
 import 'package:kasir/pelanggan/indexpelanggan.dart';
 import 'package:kasir/produk/indexproduk.dart';
+import 'package:kasir/register/register.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,6 +30,9 @@ class _HomePageState extends State<HomePage> {
               Tab(
                   icon: Icon(Icons.shopping_cart, color: Colors.black),
                   text: 'Penjualan'),
+              Tab(
+                  icon: Icon(Icons.account_balance_wallet, color: Colors.black),
+                  text: 'Detail Penjualan'),
             ],
           ),
           backgroundColor: Colors.pink.shade50,
@@ -39,7 +44,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             PelangganTab(), // Halaman Pelanggan
             ProdukTab(), // Halaman Produk
-            PenjualanTab(), // Halaman Penjualan
+            indexpenjualan(), // Halaman Penjualan
           ],
         ),
       ),
@@ -60,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Profil'),
             onTap: () {
               Navigator.push(
-                context,
+                context, 
                 MaterialPageRoute(builder: (context) => const ProfilePage()),
               );
             },
@@ -76,16 +81,12 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
             onTap: () {
-              Navigator.pop(context); // Menutup drawer
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())); // Menutup drawer
             },
-          ),
+          ),    
         ],
       ),
     );
@@ -113,26 +114,14 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+// class LoginPage extends StatelessWidget {
+//   const LoginPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: const Center(child: Text('Halaman Register')),
-    );
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: const Center(child: Text('Halaman Login')),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Login')),
+//       body: const Center(child: Text('Halaman Login')),
+//     );
+//   }
+// }

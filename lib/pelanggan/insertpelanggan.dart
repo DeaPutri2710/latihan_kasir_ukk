@@ -63,7 +63,7 @@ class _insertPageState extends State<insertPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Alamat tidak boleh kosong';
+                    return 'Nama Pelanggan tidak boleh kosong.';
                   }
                   return null;
                 },
@@ -77,7 +77,7 @@ class _insertPageState extends State<insertPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Nomor tidak boleh kosong';
+                    return 'Nomor Telepon tidak boleh kosong.';
                   }
                   return null;
                 },
@@ -91,7 +91,7 @@ class _insertPageState extends State<insertPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Alamat tidak boleh kosong';
+                    return 'Alamat tidak boleh kosong.';
                   }
                   return null;
                 },
