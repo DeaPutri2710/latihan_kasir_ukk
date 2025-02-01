@@ -3,7 +3,7 @@ import 'package:kasir/Penjualan/indexpenjualan.dart';
 import 'package:kasir/main.dart';
 import 'package:kasir/pelanggan/indexpelanggan.dart';
 import 'package:kasir/produk/indexproduk.dart';
-import 'package:kasir/register/register.dart';
+import 'package:kasir/register/index.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RegisterPage()),
+                MaterialPageRoute(builder: (context) => const UserRegister()),
               );
             },
           ),

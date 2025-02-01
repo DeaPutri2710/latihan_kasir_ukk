@@ -22,23 +22,13 @@ class _insertPageState extends State<insertPage> {
       final String Stok = _stk.text;
 
       final response = await Supabase.instance.client.from('produk').insert({
-        'NamaProduk': NamaProduk, 
+        'NamaProduk': NamaProduk,
         'Harga': Harga,
         'Stok': Stok,
       });
 
       //Cek jika ada error pada response
-      if (response == null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
+      Navigator.of(context).pop(true);
     }
   }
 

@@ -34,8 +34,8 @@ class _UpdateProdukState extends State<UpdateProduk> {
 
       setState(() {
         _namaProdukController.text = data['NamaProduk'] ?? '';
-        _hargaController.text = data['Harga'] ?? '';
-        _stokController.text = data['Stok'] ?? '';
+        _hargaController.text = data['Harga'].toString();
+        _stokController.text = data['Stok'].toString();
         _isLoading = false;
       });
     } catch (e) {
@@ -54,17 +54,15 @@ class _UpdateProdukState extends State<UpdateProduk> {
       try {
         await Supabase.instance.client.from('produk').update({
           'NamaProduk': _namaProdukController.text,
-          'Harga': _hargaController.text,
-          'Stok': _stokController.text,
-        }).eq('PelangganID', widget.ProdukID);
+          'Harga': int.parse(_hargaController.text),
+          'Stok': int.parse(_stokController.text),
+        }).eq('ProdukID', widget.ProdukID);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Data produk berhasil diperbarui.')),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+
+        Navigator.of(context).pop(true); // Kembali ke halaman sebelumnya dan kirim status perubahan
       } catch (e) {
         print('Error updating produk: $e');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +106,7 @@ class _UpdateProdukState extends State<UpdateProduk> {
                     SizedBox(height: 16),
                     TextFormField(
                       controller: _hargaController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Harga',
                         border: OutlineInputBorder(),
@@ -116,17 +115,20 @@ class _UpdateProdukState extends State<UpdateProduk> {
                         if (value == null || value.isEmpty) {
                           return 'Harga tidak boleh kosong.';
                         }
+                        if (int.tryParse(value) == null) {
+                          return 'Harga harus berupa angka.';
+                        }
                         return null;
                       },
                     ),
                     SizedBox(height: 16),
                     TextFormField(
                       controller: _stokController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Stok',
                         border: OutlineInputBorder(),
                       ),
-                      keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Stok tidak boleh kosong.';

@@ -6,7 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProdukTab extends StatefulWidget {
   @override
-  _ProdukTabState createState() => _ProdukTabState(); 
+  _ProdukTabState createState() => _ProdukTabState();
 }
 
 class _ProdukTabState extends State<ProdukTab> {
@@ -112,16 +112,19 @@ class _ProdukTabState extends State<ProdukTab> {
                                 IconButton(
                                   icon: const Icon(Icons.edit,
                                       color: Colors.blueAccent),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     final Produkid = oduk['ProdukID'] ?? 0;
                                     if (Produkid != 0) {
-                                      Navigator.push(
+                                      var hasil = await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               UpdateProduk(ProdukID: Produkid),
                                         ),
                                       );
+                                      if (hasil == true) {
+                                        fetchProduk();
+                                      }
                                     } else {
                                       print('ID produk tidak valid');
                                     }
@@ -166,11 +169,14 @@ class _ProdukTabState extends State<ProdukTab> {
                   },
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          var hasil = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => insertPage()),
           );
+          if (hasil == true) {
+            fetchProduk();
+          }
         },
         child: Icon(Icons.add),
       ),

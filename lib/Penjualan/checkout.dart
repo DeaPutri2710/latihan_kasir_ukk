@@ -43,7 +43,6 @@ class _COpageState extends State<COpage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     takeProduct();
     takePelanggan();
@@ -53,16 +52,13 @@ class _COpageState extends State<COpage> {
     final String name = nameController.dropDownValue!.value;
     final int quantity = int.parse(quantityController.text);
     print('Pelanggan Name: $name, Quantity: $quantity');
-    // Navigate back to the previous screen after adding the product
     Navigator.of(context).pop();
   }
 
   void addProduct() {
-    // Implement the logic to add the product, e.g., send data to Supabase
     final String name = nameController.dropDownValue!.value;
     final int quantity = int.parse(quantityController.text);
     print('Product Name: $name, Quantity: $quantity');
-    // Navigate back to the previous screen after adding the product
     Navigator.of(context).pop();
   }
 
