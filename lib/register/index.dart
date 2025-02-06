@@ -88,7 +88,6 @@ class _UserRegisterState extends State<UserRegister> {
                         ),
                       ),
                     ),
-
                     // User Cards
                     Expanded(
                       child: ListView.builder(

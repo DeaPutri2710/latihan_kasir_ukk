@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kasir/penjualan/checkout.dart';
@@ -113,7 +112,7 @@ class _indexpenjualanState extends State<indexpenjualan> {
         },
         child: Icon(
           Icons.add,
-          color: Colors.grey,
+          color: Colors.black,
         ),
       ),
     );

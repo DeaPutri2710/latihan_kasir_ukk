@@ -74,7 +74,7 @@ class _insertPageState extends State<insertPage> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.isEmpty) { 
                     return 'Stok tidak boleh kosong';
                   }
                   return null;
