@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kasir/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -59,6 +60,8 @@ class _insertPageState extends State<insertPage> {
                   labelText: 'Harga',
                   border: OutlineInputBorder(),
                 ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Harga tidak boleh kosong';
@@ -73,6 +76,8 @@ class _insertPageState extends State<insertPage> {
                   labelText: 'Stok',
                   border: OutlineInputBorder(),
                 ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   if (value == null || value.isEmpty) { 
                     return 'Stok tidak boleh kosong';

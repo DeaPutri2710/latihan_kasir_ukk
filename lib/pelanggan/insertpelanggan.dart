@@ -20,24 +20,33 @@ class _insertPageState extends State<insertPage> {
       final String NamaPelanggan = _nmplg.text;
       final String Alamat = _alamat.text;
       final String NomorTelepon = _notlp.text;
-
-      final response = await Supabase.instance.client.from('pelanggan').insert({
-        'NamaPelanggan': NamaPelanggan, 
-        'Alamat': Alamat,
-        'NomorTelepon': NomorTelepon,
-      });
-
-      //Cek jika ada error pada response
-      if (response == null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+      try {
+        final response =
+            await Supabase.instance.client.from('pelanggan').insert({
+          'NamaPelanggan': NamaPelanggan,
+          'Alamat': Alamat,
+          'NomorTelepon': NomorTelepon,
+        });
+        //Cek jika ada error pada response
+        if (response == null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      } catch (error) {
+        if (error is PostgrestException && error.code == '23505') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Nama pelanggan ini sudah terdaftar')
+            ),
+          );
+        }
       }
     }
   }
