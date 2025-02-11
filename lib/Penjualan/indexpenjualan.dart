@@ -27,7 +27,8 @@ class _indexpenjualanState extends State<indexpenjualan> {
     try {
       final response = await Supabase.instance.client
           .from('penjualan')
-          .select('*, pelanggan(*)');
+          .select('*, pelanggan(*)')
+          .order('TanggalPenjualan', ascending: false);
       print(response);
       setState(() {
         penjualan = List<Map<String, dynamic>>.from(response);
@@ -59,62 +60,69 @@ class _indexpenjualanState extends State<indexpenjualan> {
     // bool isLoading = true;
     return Scaffold(
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: penjualan.length,
-              itemBuilder: (context, index) {
-                final item = penjualan[index];
-                return ListTile(
-                  title: Text(item['pelanggan']['NamaPelanggan']),
-                  subtitle: Text('Total harga: ${item['TotalHarga']}'),
-                  trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Hapus Pelanggan'),
-                              content: const Text(
-                                  'Apakah anda yakin ingin menghapus produk ini?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('Batal'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    deletePenjualan(item['PenjualanID']);
-                                    Navigator.pop(context);
-                                    setState(() {
-                                      penjualan.removeAt(index);
-                                    });
-                                  },
-                                  child: const Text('Hapus'),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      }
+          ? const Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: () async => fetchPenjualan(),
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: penjualan.length,
+                itemBuilder: (context, index) {
+                  final item = penjualan[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      title: Text(item['pelanggan']['NamaPelanggan']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Total harga: ${item['TotalHarga']}'),
+                          Text('Tanggal Penjualan: ${item['TanggalPenjualan']}'),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _showDeleteDialog(context, item, index),
+                      ),
                     ),
-                );
-              }),
+                  );
+                },
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var sales = await Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => COpage()),
           );
-
-          if (sales == true) {
-            fetchPenjualan();
-          }
+          if (sales == true) fetchPenjualan();
         },
-        child: Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
+        child: const Icon(Icons.add, color: Colors.black),
       ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, Map<String, dynamic> item, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Hapus Pelanggan'),
+          content: const Text('Apakah anda yakin ingin menghapus produk ini?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                deletePenjualan(item['PenjualanID']);
+                Navigator.pop(context);
+                setState(() => penjualan.removeAt(index));
+              },
+              child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

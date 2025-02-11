@@ -23,7 +23,11 @@ class _DetailPenjualanState extends State<DetailPenjualan> {
   Future<void> fetchDetail() async {
     setState(() => isLoading = true);
     try {
-      final response = await Supabase.instance.client.from('detailpenjualan').select();
+      final response = await Supabase.instance.client
+        .from('detailpenjualan')
+        .select('*, penjualan(*, pelanggan(*)), produk(*)')
+        .order('TanggalPenjualan', ascending: false, referencedTable: 'penjualan');
+      print(response);
       setState(() => detaill = List<Map<String, dynamic>>.from(response));
     } catch (e) {
       print('Error: $e');
@@ -79,14 +83,16 @@ class _DetailPenjualanState extends State<DetailPenjualan> {
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(16),
                         title: Text(
-                          'Produk ID: ${detail['ProdukID'] ?? '-'}',
+                          'Produk: ${detail['produk']['NamaProduk'] ?? '-'}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text('Nama Pembeli: ${detail['penjualan']['pelanggan']['NamaPelanggan'] ?? '-'}'),
                             Text('Jumlah: ${detail['JumlahProduk'] ?? '-'}'),
                             Text('Subtotal: Rp. ${detail['Subtotal'] ?? '-'}'),
+                            Text('Tanggal Penjualan: ${detail['penjualan']['TanggalPenjualan'] ?? '-'}'),
                           ],
                         ),
                         trailing: ElevatedButton(
